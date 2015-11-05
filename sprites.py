@@ -7,26 +7,31 @@ class Player(pygame.sprite.Sprite):
         super(Player, self).__init__()
 
         sprite_width = 70
-        img = pygame.image.load('assets/plane.png')
-        img_width, img_height = img.get_size()
-        self.image = pygame.transform.scale(
-            img,
+        self.original_image = pygame.image.load('assets/plane.png')
+        img_width, img_height = self.original_image.get_size()
+        self.original_image = pygame.transform.scale(
+            self.original_image,
             (sprite_width, int(1.0 * sprite_width/img_width*img_height)))
 
+        self.image = self.original_image
+
         self.rect = self.image.get_rect()
+
+        self.rect.left = 75
 
         self.target_y = 50
         self.ease_in = 6.0
 
 
     def update(self):
-        self.rect.centery += (self.target_y - self.rect.centery)/ self.ease_in
+        delta_y = (self.target_y - self.rect.centery)/ self.ease_in
+        self.rect.centery += delta_y
+        self.image = pygame.transform.rotate(self.original_image, - delta_y)
 
 
 class Letter(pygame.sprite.Sprite):
 
-    # letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    letters = 'ABC'
+    letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     letter_index = 0
 
     def __init__(self, start_location):

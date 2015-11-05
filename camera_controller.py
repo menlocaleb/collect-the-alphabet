@@ -10,7 +10,9 @@ MYEVENT = USEREVENT + 1
 
 def run_camera_controller(camera, debug=False):        
 
+    # TODO sliding window averaging to make more stable?
     last_y = 0
+    change_threshold = 2
 
     while True:
         img = camera.getImage()
@@ -30,7 +32,7 @@ def run_camera_controller(camera, debug=False):
             if blobs:
                 blob_center = blobs[-1].centroid()
                 height_ratio = blob_center[1] / float(img_binary.height)
-                if abs(blob_center[1] - last_y) > 5:
+                if abs(blob_center[1] - last_y) > change_threshold:
                     pygame.event.post(pygame.event.Event(MYEVENT,{'y': height_ratio}))
                     # print 'posted'
                 
